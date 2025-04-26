@@ -11,8 +11,6 @@ import {
   Check,
   ChevronRight,
 } from "lucide-react";
-//@ts-ignore
-import { CopyToClipboard } from "react-copy-to-clipboard";
 import { usePrivy, useWallets, useSolanaWallets } from "@privy-io/react-auth";
 import axios from "axios";
 
