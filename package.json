@@ -35,6 +35,7 @@
     "react": "^19.0.0",
     "react-copy-to-clipboard": "^5.1.0",
     "react-dom": "^19.0.0",
+    "smee-client": "^3.1.1",
     "tsc": "^2.0.4",
     "universal-github-app-jwt": "^2.2.2",
     "uuid": "^11.1.0"

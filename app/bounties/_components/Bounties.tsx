@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Tags, Clock, DollarSign, Search, Filter } from 'lucide-react';
+import { Clock, DollarSign, Search, Filter } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 

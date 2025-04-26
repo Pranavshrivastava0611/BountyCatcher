@@ -9,7 +9,6 @@ import {
   DollarSign,
   Copy,
   Check,
-  Link,
   ChevronRight,
 } from "lucide-react";
 //@ts-ignore

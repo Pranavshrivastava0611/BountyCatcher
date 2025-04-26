@@ -13,14 +13,11 @@ export async function GET(request: Request) {
     }
 
     try {
-        // Query for completed bounties based on contributorId (string)
+       
         const completedBounties = await db.select().from(BOUNTIES).where(and(eq(BOUNTIES.contributorId, userId), eq(BOUNTIES.status, "closed")));
 
-        // Query for generated bounties where the repoInfo JSON field's owner is equal to userId
+      
         const generatedBounties = await db.select().from(BOUNTIES).where(eq(BOUNTIES.repoOwner, userId));
-
-        console.log("completedBounties", completedBounties);
-        console.log("generatedBounties", generatedBounties);
 
         return NextResponse.json({ completedBounties, generatedBounties }, { status: 200 });
     } catch (error) {
