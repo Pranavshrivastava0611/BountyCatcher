@@ -6,7 +6,7 @@ import {
   PublicKey,
   SystemProgram,
   VersionedTransaction,
-  TransactionMessage
+  TransactionMessage,
 } from '@solana/web3.js';
 import { TRANSACTIONS, PULL_REQUEST } from "@/lib/schema";
 import { db } from "@/configs/db";
@@ -55,11 +55,12 @@ export async function POST(request: Request) {
   const amountInLamports = amount * LAMPORTS_PER_SOL;
 
   if (maintainerBalance < amountInLamports) {
-    // 📨 Send Email using EmailJS
-
-    return new Response("Insufficient balance. Email sent to maintainer.", { status: 402 });
+    return new Response(
+      JSON.stringify({ message: "insufficient balance" }),
+      { status: 400 }
+    );
   }
-
+  
   // ✅ Proceed with transaction
   const instruction = SystemProgram.transfer({
     fromPubkey: walletPublicKey,
@@ -82,13 +83,6 @@ export async function POST(request: Request) {
     caip2: 'solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1',
     transaction,
   });
-
-  // const { signedTransaction } = await privy.walletApi.solana.signTransaction({
-  //   //@ts-ignore
-  //   walletId: maintainerWallet.id,
-  //   transaction
-  // });
-
   await db.insert(TRANSACTIONS).values({
     prId,
     amount: amount.toString(),

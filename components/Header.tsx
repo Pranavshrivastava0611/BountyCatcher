@@ -4,12 +4,14 @@ import React, { useState, useEffect, Fragment } from 'react';
 import { Menu as MenuIcon, X, Github, Wallet, User, LogOut, Settings, ChevronDown } from 'lucide-react';
 import { Menu, Transition } from '@headlessui/react';
 import { usePrivy } from '@privy-io/react-auth';
+import { useRouter } from 'next/navigation';
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('');
-  const {user,logout} = usePrivy() // Simulating user data for demo
+  const {user,logout} = usePrivy();
+  const router = useRouter()
  
 
   useEffect(() => {
@@ -106,7 +108,7 @@ const Header: React.FC = () => {
               <Menu as="div" className="relative inline-block text-left">
                 <Menu.Button className="flex items-center space-x-2 px-4 py-2 text-sm font-medium text-gray-300 hover:text-white focus:outline-none">
                   <User className="w-5 h-5" />
-                  <span>{user.github?.name}</span>
+                  <span>{user.github?.name || user.github?.username}</span>
                   <ChevronDown className="w-4 h-4" />
                 </Menu.Button>
                 <Transition
@@ -119,40 +121,37 @@ const Header: React.FC = () => {
                   leaveTo="transform opacity-0 scale-95"
                 >
                   <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right rounded-md bg-[#1A1A24] border border-[#2D2D3A] shadow-lg focus:outline-none">
-                    <div className="py-1">
+                    <div
+                      className="py-1"
+                      onClick={() => router.push("/Profile")}
+                    >
                       <Menu.Item>
                         {({ active }) => (
-                          <a
-                            href="#profile"
+                          <button
                             className={`${
-                              active ? 'bg-[#2D2D3A] text-white' : 'text-gray-300'
+                              active
+                                ? "bg-[#2D2D3A] text-white"
+                                : "text-gray-300"
                             } flex w-full items-center px-4 py-2 text-sm`}
+                            onClick={() => router.push("/Profile")}
                           >
                             <User className="w-4 h-4 mr-2" />
                             Profile
-                          </a>
-                        )}
-                      </Menu.Item>
-                      <Menu.Item>
-                        {({ active }) => (
-                          <a
-                            href="#settings"
-                            className={`${
-                              active ? 'bg-[#2D2D3A] text-white' : 'text-gray-300'
-                            } flex w-full items-center px-4 py-2 text-sm`}
-                          >
-                            <Settings className="w-4 h-4 mr-2" />
-                            Settings
-                          </a>
+                          </button>
                         )}
                       </Menu.Item>
                       <div className="border-t border-[#2D2D3A]">
                         <Menu.Item>
                           {({ active }) => (
                             <button
-                              onClick={() => {/* Handle logout */}}
+                              onClick={() => {
+                                logout();
+                                window.location.reload();
+                              }}
                               className={`${
-                                active ? 'bg-[#2D2D3A] text-red-300' : 'text-red-400'
+                                active
+                                  ? "bg-[#2D2D3A] text-red-300"
+                                  : "text-red-400"
                               } flex w-full items-center px-4 py-2 text-sm`}
                             >
                               <LogOut className="w-4 h-4 mr-2" />
@@ -166,15 +165,14 @@ const Header: React.FC = () => {
                 </Transition>
               </Menu>
             ) : (
-              <a
-                href="https://a2d1-220-158-168-162.ngrok-free.app/dashboard"
-                target="_blank"
+              <button
+                onClick={() => router.push("/dashboard")}
                 rel="noopener noreferrer"
                 className="flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-black bg-[#14F195] hover:bg-[#14F195]/90 transition-colors"
               >
                 <Github className="w-4 h-4 mr-2" />
                 Connect GitHub
-              </a>
+              </button>
             )}
           </div>
 
@@ -211,25 +209,21 @@ const Header: React.FC = () => {
                 {label}
               </button>
             ))}
-            
+
             {user ? (
               <div className="pt-4 space-y-2">
-                <a
-                  href="#profile"
+                <button
+                  onClick={() => router.push("/Profile")}
                   className="flex items-center px-3 py-2 rounded-md text-gray-300 hover:bg-[#2D2D3A] transition-colors"
                 >
                   <User className="w-4 h-4 mr-2" />
                   Profile
-                </a>
-                <a
-                  href="#settings"
-                  className="flex items-center px-3 py-2 rounded-md text-gray-300 hover:bg-[#2D2D3A] transition-colors"
-                >
-                  <Settings className="w-4 h-4 mr-2" />
-                  Settings
-                </a>
+                </button>
                 <button
-                  onClick={() => {logout();}}
+                  onClick={() => {
+                    logout();
+                    window.location.reload();
+                  }}
                   className="flex items-center w-full px-3 py-2 rounded-md text-red-400 hover:bg-[#2D2D3A] transition-colors"
                 >
                   <LogOut className="w-4 h-4 mr-2" />
@@ -238,15 +232,14 @@ const Header: React.FC = () => {
               </div>
             ) : (
               <div className="pt-4">
-                <a
-                  href="https://a2d1-220-158-168-162.ngrok-free.app/dashboard"
-                  target="_blank"
+                <button
+                  onClick={() => router.push("/dashboard")}
                   rel="noopener noreferrer"
                   className="flex items-center justify-center w-full px-4 py-2 border border-transparent text-base font-medium rounded-md text-black bg-[#14F195] hover:bg-[#14F195]/90"
                 >
                   <Github className="w-4 h-4 mr-2" />
                   Connect GitHub
-                </a>
+                </button>
               </div>
             )}
           </div>

@@ -33,6 +33,7 @@
     "privy-sdk": "^2.0.4",
     "probot": "^13.4.5",
     "react": "^19.0.0",
+    "react-copy-to-clipboard": "^5.1.0",
     "react-dom": "^19.0.0",
     "tsc": "^2.0.4",
     "universal-github-app-jwt": "^2.2.2",

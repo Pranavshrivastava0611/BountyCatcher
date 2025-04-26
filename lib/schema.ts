@@ -27,19 +27,24 @@ export const REPOS = pgTable("repositories", {
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
 });
 
-  export const BOUNTIES = pgTable('bounties', {
-    id: uuid('id').defaultRandom().primaryKey(),
-    title: text('title').notNull(),
-    description: text('description').notNull(),
-    amount: text('amount').notNull(),
-    tokenType: text('token_type').notNull(), // e.g., SOL, USDC
-    repoId: text('repo_id').notNull(),
-    repoInfo : json('repo_info').notNull(), // JSON object containing repo details
-    repoLink: text('repo_link').notNull(),
-    issueNumber: text('issue_number'),
-    status: text('status').notNull(),
-    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
-  });
+export const BOUNTIES = pgTable('bounties', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  title: text('title').notNull(),
+  description: text('description').notNull(),
+  amount: text('amount').notNull(),
+  tokenType: text('token_type').notNull(),
+  repoId: text('repo_id').notNull(),
+  repoInfo: json('repo_info').notNull(),
+  repoLink: text('repo_link').notNull(),
+  repoOwner: text('repo_owner').notNull(),
+  issueNumber: text('issue_number'),
+  status: text('status').notNull(), 
+  contributorId: text('contributor_id'),
+  prLink: text('pr_link'),
+  mergedAt: timestamp('merged_at', { withTimezone: true }),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
+});
+
 
   export const PULL_REQUEST = pgTable("pull_requests", {
     id: uuid("id").defaultRandom().primaryKey(),
@@ -66,12 +71,5 @@ export const REPOS = pgTable("repositories", {
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
   });
 
-
-// export const WEBHOOK_EVENT = pgTable('webhook_events', {
-//   id: uuid('id').defaultRandom().primaryKey(),
-//   eventType: text('event_type').notNull(),
-//   payload: json('payload').notNull(),
-//   receivedAt: timestamp('received_at', { withTimezone: true }).defaultNow(),
-// });
 
 

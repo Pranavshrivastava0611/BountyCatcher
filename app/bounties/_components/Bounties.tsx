@@ -49,6 +49,7 @@ const Bounties: React.FC = () => {
   const [selectedDifficulty, setSelectedDifficulty] = useState<string | null>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [bounties,setBounties] = useState<Bounty[]>([])
+  const [date, setDate] = useState(new Date());
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const router = useRouter();
 
@@ -65,6 +66,7 @@ const Bounties: React.FC = () => {
     };
 
     fetchBounties();
+    setDate(new Date());
   },[])
 
   useEffect(()=>{
@@ -175,7 +177,6 @@ const Bounties: React.FC = () => {
       }
       requestAnimationFrame(animate);
     }
-
     function handleResize() {
       updateCanvasSize();
       init();
@@ -189,6 +190,11 @@ const Bounties: React.FC = () => {
       window.removeEventListener('resize', handleResize);
     };
   }, [isVisible]);
+
+  function dateDiff(from: Date, to: Date): number {
+    const diffTime = Math.abs(to.getTime() - from.getTime());
+    return Math.floor(diffTime / (1000 * 60 * 60 * 24));
+  }
 
   return (
     <section
@@ -287,11 +293,12 @@ const Bounties: React.FC = () => {
                 </div>
                 <div className="flex items-center text-sm text-gray-300">
                   <Clock className="w-4 h-4 mr-1 text-gray-500" />
-                  <span>{bounty.createdAt.toLocaleString()}</span>
+                  <span>
+                    {dateDiff(new Date(bounty.createdAt), new Date())} days ago
+                  </span>
                   <span className="mx-2">•</span>
                 </div>
               </div>
-
               <a
                 href={bounty.repoLink}
                 target="_blank"

@@ -3,6 +3,11 @@ import { db } from "@/configs/db";
 import { BOUNTIES,USER_TABLE,PULL_REQUEST,REPOS} from "@/lib/schema";
 import { eq ,and} from "drizzle-orm";
 import axios from "axios";
+import { Connection,clusterApiUrl } from "@solana/web3.js";
+import { CheckBalance } from "@/lib/getBalance";
+
+const connection = new Connection(clusterApiUrl("devnet"));
+
 
 const app: ApplicationFunction = (app) => {
   app.log.info("🤖 BountyCatcher bot loaded!");
@@ -12,6 +17,7 @@ const app: ApplicationFunction = (app) => {
     const pr = context.payload.pull_request;
     const repo = context.payload.repository;
     const githubId = pr.user.id.toString();
+    const maintainerGithubId = context.payload.sender.id.toString();
     const prBody = pr.body?.trim();
     const [owner, repoName] = context.payload.repository.full_name.split("/");
   
@@ -63,7 +69,7 @@ const app: ApplicationFunction = (app) => {
         owner,
         repo: repoName,
         issue_number: pr.number,
-        body: `🚨 @${pr.user.login}, please [register and link your wallet](https://a2d1-220-158-168-162.ngrok-free.app/dashboard) to participate in bounties.`,
+        body: `🚨 @${pr.user.login}, please [register and link your wallet](https://a532-59-89-50-211.ngrok-free.app/dashboard) to participate in bounties.`,
       });
       return;
     }
@@ -109,7 +115,7 @@ const app: ApplicationFunction = (app) => {
   
       return;
     }
-  
+
     if (bounty.status !== "open") {
       await context.octokit.issues.createComment({
         owner,
@@ -127,6 +133,42 @@ const app: ApplicationFunction = (app) => {
   
       return;
     }
+
+    //check for the maintainer's wallet balance ;
+    try{
+      
+      const maintainer = await db
+      .select()
+      .from(USER_TABLE)
+      //@ts-ignore
+      .where(eq(USER_TABLE.username,bounty.repoInfo.owner));
+
+      if (!maintainer.length) {
+        throw new Error("Maintainer not found in DB");
+      }
+
+      const maintainerPrivyId = maintainer[0].userId;
+      const reponse = await CheckBalance(maintainerPrivyId);
+      const balance = await reponse!.json();
+      if(balance.balance < bounty.amount){
+        await context.octokit.issues.createComment({
+          owner,
+          repo: repoName,
+          issue_number: pr.number,
+          body: `🚨 @${pr.user.login}, the maintainer does not have enough balance to pay the bounty for this PR. Please contact the maintainer.`,
+        });
+        await context.octokit.pulls.update({
+          owner,
+          repo: repoName,
+          pull_number: pr.number,
+          state: "closed",
+        });
+        return;
+      }
+    }catch(error){
+      app.log.error(error);
+    }
+
     // ✅ Everything passed
     await context.octokit.issues.createComment({
       owner,
@@ -208,7 +250,7 @@ const app: ApplicationFunction = (app) => {
   
     if (!user || !user.privyWallet) {
       await context.octokit.issues.createComment(context.issue({
-        body: `🚫 @${sender}, you need to [register your wallet](https://a2d1-220-158-168-162.ngrok-free.app/dashboard) before creating a bounty.\n\n👉 Visit the link and connect your wallet via GitHub login.`,
+        body: `🚫 @${sender}, you need to [register your wallet](https://a532-59-89-50-211.ngrok-free.app/dashboard) before creating a bounty.\n\n👉 Visit the link and connect your wallet via GitHub login.`,
       }));
       return;
     }
@@ -259,7 +301,6 @@ const app: ApplicationFunction = (app) => {
       repo,
       issue_number: Number(issueNumber),
     });
-
     // ✅ Register the bounty
     await db.insert(BOUNTIES).values({
       title: issue.data.title,
@@ -267,6 +308,7 @@ const app: ApplicationFunction = (app) => {
       amount,
       tokenType,
       repoId: context.payload.repository.node_id,
+      repoOwner: context.payload.repository.owner.login,
       repoInfo: JSON.stringify({
         name: context.payload.repository.name,
         full_name: context.payload.repository.full_name,
@@ -286,19 +328,20 @@ const app: ApplicationFunction = (app) => {
   app.on('pull_request.closed', async (context) => {
     const pr = context.payload.pull_request;
     const isMerged = pr.merged;
-
+  
     if (!isMerged) return;
-
+  
     const prBody = pr.body?.trim() || "";
     const prNumber = pr.number;
     const [owner, repo] = context.payload.repository.full_name.split("/");
     const repoId = context.payload.repository.node_id;
-
+  
     const contributorGithubId = pr.user.id.toString();
     const contributorUsername = pr.user.login;
     const mergerGithubId = context.payload.sender.id.toString();
     const mergerUsername = context.payload.sender.login;
     const prUrl = pr.html_url;
+  
     // Extract issue number from PR body
     const match = prBody.match(/fix_issue#(\d+)/i);
     if (!match) {
@@ -311,42 +354,43 @@ const app: ApplicationFunction = (app) => {
       });
       return;
     }
-
+  
     const issueNumber = match[1];
-    console.log("issue number form merged pr : ", issueNumber);
-
+    console.log("Issue number from merged PR:", issueNumber);
+  
     // Fetch bounty info
-    console.log("repoId : ", repoId);
-    console.log("issueNumber : ", issueNumber);
-
     const bounty = await db
       .select()
       .from(BOUNTIES)
       .where(
         and(eq(BOUNTIES.repoId, repoId), eq(BOUNTIES.issueNumber, issueNumber))
       );
-
-    console.log("bounty from ", bounty);
+  
+    console.log("Bounty fetched:", bounty);
     if (!bounty.length) {
       context.log.warn(`No bounty found for issue #${issueNumber}`);
       return;
     }
-
+  
     const amount = bounty[0].amount;
-    console.log("amount : ", amount);
-
-    // Fetch users
+  
+    // Fetch Maintainer and Contributor users
     const MaintainerUser = await db
       .select()
       .from(USER_TABLE)
       .where(eq(USER_TABLE.githubId, mergerGithubId));
-
+  
     const ContributorUser = await db
       .select()
       .from(USER_TABLE)
       .where(eq(USER_TABLE.githubId, contributorGithubId));
-
-    // Notify PR merged
+  
+    if (!MaintainerUser.length || !ContributorUser.length) {
+      context.log.error("❌ Missing Maintainer or Contributor user data.");
+      return;
+    }
+  
+    // Notify that PR merged
     await context.octokit.issues.createComment({
       owner,
       repo,
@@ -354,30 +398,8 @@ const app: ApplicationFunction = (app) => {
       body: `🎉 @${contributorUsername}'s PR #${prNumber} was merged! Bounty for issue #${issueNumber} will now be processed.`,
     });
 
-    //check all the sending info to send the bounty
-    console.log("MaintainerUser : ", MaintainerUser);
-    console.log("ContributorUser : ", ContributorUser);
-    console.log("repo : ", repo);
-    console.log("prNumber : ", prNumber);
-    console.log("mergedBy : ", mergerUsername);
-    console.log("maintainerPrivyId : ", MaintainerUser[0].userId);
-    console.log("contributorPrivyId : ", ContributorUser[0].userId);
-    console.log("prUrl : ", prUrl);
-    console.log("contributorGithubId : ", contributorGithubId);
-    console.log("contributorUsername : ", contributorUsername);
-    console.log("repoOwnerUsername : ", owner);
-    console.log("repoOwnerGithubId : ", context.payload.repository.owner.id.toString());
-    console.log("amount : ", amount);
-
-    // Send bounty payout
-
-    if (!MaintainerUser.length || !ContributorUser.length) {
-      context.log.error("❌ Missing Maintainer or Contributor user data.");
-      return;
-    }
-    
     try {
-      const response = await axios.post("https://a2d1-220-158-168-162.ngrok-free.app/api/send-bounty", {
+      const response = await axios.post("https://a532-59-89-50-211.ngrok-free.app/api/send-bounty", {
         repo: `${owner}/${repo}`,
         prNumber,
         mergedBy: mergerUsername,
@@ -390,33 +412,49 @@ const app: ApplicationFunction = (app) => {
         repoOwnerGithubId: context.payload.repository.owner.id.toString(),
         amount,
       });
-    
+  
       const txHash = response.data;
-
-      await db
-    .update(BOUNTIES)
-    .set({ status: "closed" })
-    .where(
-      and(eq(BOUNTIES.repoId, repoId), eq(BOUNTIES.issueNumber, issueNumber))
-    );
-    
+      // 🛠 Update bounty entry properly now
+      await db.update(BOUNTIES)
+        .set({
+          status: "closed",
+          contributorId: ContributorUser[0].username, // setting the solver
+          prLink: prUrl,                         // link to merged PR
+          mergedAt: new Date(),                  // now
+        })
+        .where(
+          and(eq(BOUNTIES.repoId, repoId), eq(BOUNTIES.issueNumber, issueNumber))
+        );
+  
       await context.octokit.issues.createComment({
         owner,
         repo,
         issue_number: prNumber,
-        body: `💰 Bounty of ${amount} SOL sent to @${contributorUsername}'s wallet.\n\n🔗 **[View on Solscan (Devnet)](https://solscan.io/tx/${txHash}?cluster=devnet)**`
+        body: `💰 Bounty of ${amount} SOL sent to @${contributorUsername}'s wallet.\n\n🔗 [View Transaction on Solscan (Devnet)](https://solscan.io/tx/${txHash}?cluster=devnet)`,
       });
     } catch (error) {
       context.log.error("❌ Error sending bounty:", error);
     
-      await context.octokit.issues.createComment({
-        owner,
-        repo,
-        issue_number: prNumber,
-        body: `🚨 Failed to send bounty to @${contributorUsername}. Please send the PR again and wait for the maintainer to review and merge it.`,
-      });
+      // Check if it's a 400 error
+      if (axios.isAxiosError(error) && error.response?.status === 400) {
+        await context.octokit.issues.createComment({
+          owner,
+          repo,
+          issue_number: prNumber,
+          body: `🚨 Maintainer does not have enough balance to pay the bounty for @${contributorUsername}. Please contact the maintainer.`,
+        });
+      } else {
+        // Other errors
+        await context.octokit.issues.createComment({
+          owner,
+          repo,
+          issue_number: prNumber,
+          body: `🚨 Failed to send bounty to @${contributorUsername}. Please contact support.`,
+        });
+      }
     }
   });
+  
 };
 
 export default app;
