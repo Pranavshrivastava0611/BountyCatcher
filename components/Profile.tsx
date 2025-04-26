@@ -97,10 +97,17 @@ const Profile: React.FC = () => {
     ? `${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`
     : "";
 
-  const handleCopy = () => {
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
+    const handleCopy = async () => {
+      if (walletAddress) {
+        try {
+          await navigator.clipboard.writeText(walletAddress);
+          setCopied(true);
+          setTimeout(() => setCopied(false), 2000);
+        } catch (err) {
+          console.error("Failed to copy: ", err);
+        }
+      }
+    };
 
   const filteredBounties =
     activeTab === "completed" ? completedBounties : generatedBounties;
@@ -130,15 +137,16 @@ const Profile: React.FC = () => {
                       <span className="font-mono text-gray-300">
                         {shortWallet}
                       </span>
-                      <CopyToClipboard text={walletAddress} onCopy={handleCopy}>
-                        <button className="ml-1.5 p-1 hover:bg-[#3D3D4A] rounded transition-colors">
-                          {copied ? (
-                            <Check className="w-3.5 h-3.5 text-[#14F195]" />
-                          ) : (
-                            <Copy className="w-3.5 h-3.5 text-gray-400" />
-                          )}
-                        </button>
-                      </CopyToClipboard>
+                      <button
+                        onClick={handleCopy}
+                        className="ml-1.5 p-1 hover:bg-[#3D3D4A] rounded transition-colors"
+                      >
+                        {copied ? (
+                          <Check className="w-3.5 h-3.5 text-[#14F195]" />
+                        ) : (
+                          <Copy className="w-3.5 h-3.5 text-gray-400" />
+                        )}
+                      </button>
                     </div>
                   </div>
                 )}
