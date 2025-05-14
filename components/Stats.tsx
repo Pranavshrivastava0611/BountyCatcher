@@ -1,37 +1,105 @@
 "use client"
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef,useState } from 'react';
 import { Trophy, Users, Code, DollarSign } from 'lucide-react';
+import axios from 'axios';
 
-const statItems = [
+
+export interface User {
+  id: string;
+  userId: string;
+  githubId: string;
+  username: string;
+  email?: string | null;
+  privyWallet?: string | null;
+  role: 'contributor' | 'maintainer' | 'admin';
+  createdAt: string; // ISO date string
+}
+export interface Repo {
+  id: string;
+  githubRepoId: string;
+  owner: string;
+  name: string;
+  fullName: string;
+  installationId: string;
+  registeredById: string;
+  createdAt: string;
+}
+
+export interface Bounty {
+  id: string;
+  title: string;
+  description: string;
+  amount: string;
+  tokenType: string;
+  repoId: string;
+  repoInfo: any; // or create a specific type if you know the structure
+  repoLink: string;
+  repoOwner: string;
+  issueNumber?: string | null;
+  status: string; // e.g., "open", "closed"
+  contributorId?: string | null;
+  prLink?: string | null;
+  mergedAt?: string | null;
+  createdAt: string;
+}
+
+const Stats: React.FC = () => {
+
+  const chartRef = useRef<HTMLCanvasElement>(null);
+  const [userInfo,SetUserInfo] = useState<User[]>([])
+  const [repos,setRepos] = useState<Repo[]>([]);
+  const [bounties, setBounties] = useState<Bounty[]>([]);
+  const bountyAmount = bounties.reduce((total, bounty) => {
+    return total + (parseFloat(bounty.amount) || 0);
+  }, 0);
+  
+
+    const statItems = [
   {
     icon: <Trophy className="h-8 w-8 text-[#14F195]" />,
-    value: '1,500+',
+    value: bounties.length,
     label: 'Issues Resolved',
     description: 'Successfully closed GitHub issues across projects',
   },
   {
     icon: <Users className="h-8 w-8 text-[#14F195]" />,
-    value: '3,200+',
+    value: userInfo.length,
     label: 'Contributors',
     description: 'Active community of developers earning rewards',
   },
   {
     icon: <Code className="h-8 w-8 text-[#14F195]" />,
-    value: '250+',
+    value: repos.length,
     label: 'Repositories',
     description: 'Open source projects using our bounty system',
   },
   {
     icon: <DollarSign className="h-8 w-8 text-[#14F195]" />,
-    value: '50,000+',
+    value: bountyAmount,
     label: 'SOL Distributed',
     description: 'Rewarded to open source contributors',
   },
 ];
 
-const Stats: React.FC = () => {
-  const chartRef = useRef<HTMLCanvasElement>(null);
+  useEffect(()=>{
+      const getBountiesInfo = async ()=>{
+          try{
+          const response = await axios.get("/api/get-bonties-page-info");
+          console.log("response" , response.data);
+          SetUserInfo(response.data.user_info);
+          setRepos(response.data.repos);
+          setBounties(response.data.bounties);
+          console.log("bounties",bounties)
+          console.log("repos",repos)
+          console.log("user info",userInfo)
+          }catch(e){
+            console.log("error in getting the page info ", e)
+          }
+        }
+
+        getBountiesInfo();
+  },[])
 
   useEffect(() => {
     // A simple animation for the chart

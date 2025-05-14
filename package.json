@@ -34,6 +34,7 @@
     "probot": "^13.4.5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-hot-toast": "^2.5.2",
     "smee-client": "^3.1.1",
     "tsc": "^2.0.4",
     "universal-github-app-jwt": "^2.2.2",

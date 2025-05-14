@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, Fragment } from 'react';
-import { Menu as MenuIcon, X, Github, Wallet, User, LogOut, Settings, ChevronDown } from 'lucide-react';
+import { Menu as MenuIcon, X, Github, Wallet, User, LogOut, Settings, ChevronDown,Info } from 'lucide-react';
 import { Menu, Transition } from '@headlessui/react';
 import { usePrivy } from '@privy-io/react-auth';
 import { useRouter } from 'next/navigation';
@@ -122,7 +122,6 @@ const Header: React.FC = () => {
                   <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right rounded-md bg-[#1A1A24] border border-[#2D2D3A] shadow-lg focus:outline-none">
                     <div
                       className="py-1"
-                      onClick={() => router.push("/Profile")}
                     >
                       <Menu.Item>
                         {({ active }) => (
@@ -136,6 +135,21 @@ const Header: React.FC = () => {
                           >
                             <User className="w-4 h-4 mr-2" />
                             Profile
+                          </button>
+                        )}
+                      </Menu.Item>
+                      <Menu.Item>
+                        {({ active }) => (
+                          <button
+                            className={`${
+                              active
+                                ? "bg-[#2D2D3A] text-white"
+                                : "text-gray-300"
+                            } flex w-full items-center px-4 py-2 text-sm`}
+                            onClick={() => router.push("/dashboard")}
+                          >
+                            <Info className="w-4 h-4 mr-2" />
+                            Dashboard
                           </button>
                         )}
                       </Menu.Item>
@@ -217,6 +231,13 @@ const Header: React.FC = () => {
                 >
                   <User className="w-4 h-4 mr-2" />
                   Profile
+                </button>
+                <button
+                  onClick={() => router.push("/dashboard")}
+                  className="flex items-center px-3 py-2 rounded-md text-gray-300 hover:bg-[#2D2D3A] transition-colors"
+                >
+                  <Info className="w-4 h-4 mr-2" />
+                  Dashboard
                 </button>
                 <button
                   onClick={() => {

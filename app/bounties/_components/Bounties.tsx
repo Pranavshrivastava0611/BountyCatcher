@@ -1,9 +1,10 @@
-"use client"
+"use client";
 
-import React, { useState, useEffect, useRef } from 'react';
-import { Clock, DollarSign, Search, Filter } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import axios from 'axios';
+import React, { useState, useEffect, useRef } from "react";
+import { Clock, DollarSign, Search } from "lucide-react";
+import { useRouter } from "next/navigation";
+import axios from "axios";
+import { usePathname } from "next/navigation";
 
 interface Particle {
   x: number;
@@ -16,13 +17,6 @@ interface Particle {
   draw: (ctx: CanvasRenderingContext2D) => void;
 }
 
-
-const difficultyColors = {
-  Easy: 'bg-emerald-500/20 text-emerald-500',
-  Medium: 'bg-amber-500/20 text-amber-500',
-  Hard: 'bg-red-500/20 text-red-500',
-};
-
 export interface RepoInfo {
   name: string;
   full_name: string;
@@ -34,69 +28,68 @@ export interface Bounty {
   id: string;
   title: string;
   description: string;
-  amount: string; // if it's a number, change to `number`
-  tokenType: 'SOL' | 'ETH' | string; // extend if more types are supported
+  amount: string;
+  tokenType: "SOL" | "ETH" | string;
   repoId: string;
   repoInfo: RepoInfo;
   repoLink: string;
   issueNumber: string;
-  status: 'open' | 'closed'; // adjust based on possible states
-  createdAt: string | Date; // depends on how it's consumed/parsed
+  status: "open" | "closed";
+  createdAt: string | Date;
+  difficulty: "Easy" | "Medium" | "Hard";
 }
 
 const Bounties: React.FC = () => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedDifficulty, setSelectedDifficulty] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
   const [isVisible, setIsVisible] = useState(false);
-  const [bounties,setBounties] = useState<Bounty[]>([])
+  const [bounties, setBounties] = useState<Bounty[]>([]);
   const [date, setDate] = useState(new Date());
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const router = useRouter();
+  const pathname = usePathname();
+  const pathCheck = pathname.split("/").indexOf("bounties") !== -1;
 
-  useEffect(()=>{
+  useEffect(() => {
     const fetchBounties = async () => {
       try {
         const response = await axios.get("/api/bounties");
         const data = response.data;
-        console.log("data",data)
         setBounties(data);
       } catch (error) {
-        console.error('Error fetching bounties:', error);
+        console.error("Error fetching bounties:", error);
       }
     };
 
     fetchBounties();
     setDate(new Date());
-  },[])
+  }, []);
 
-  useEffect(()=>{
-    console.log(bounties)
-  },[bounties])
   useEffect(() => {
     const handleScroll = () => {
-      const element = document.getElementById('bounties');
+      const element = document.getElementById("bounties");
       if (element) {
         const rect = element.getBoundingClientRect();
         setIsVisible(rect.top <= window.innerHeight * 0.75);
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
     handleScroll();
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   useEffect(() => {
     if (!isVisible) return;
-    
+
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
     const updateCanvasSize = () => {
-      const section = document.getElementById('bounties');
+      const section = document.getElementById("bounties");
       if (section) {
         canvas.width = section.offsetWidth;
         canvas.height = section.offsetHeight;
@@ -107,7 +100,7 @@ const Bounties: React.FC = () => {
 
     const particlesArray: Particle[] = [];
     const numberOfParticles = Math.min(70, Math.floor(canvas.width / 20));
-    const colors = ['#9945FF', '#14F195', '#9945FF80', '#14F19580'];
+    const colors = ["#9945FF", "#14F195", "#9945FF80", "#14F19580"];
 
     class ParticleClass implements Particle {
       x: number;
@@ -129,7 +122,6 @@ const Bounties: React.FC = () => {
       update() {
         this.x += this.speedX;
         this.y += this.speedY;
-
         if (this.x > canvas!.width) this.x = 0;
         else if (this.x < 0) this.x = canvas!.width;
         if (this.y > canvas!.height) this.y = 0;
@@ -153,21 +145,17 @@ const Bounties: React.FC = () => {
 
     function animate() {
       if (!isVisible) return;
-      
       ctx!.clearRect(0, 0, canvas!.width, canvas!.height);
-      
       for (let i = 0; i < particlesArray.length; i++) {
         particlesArray[i].update();
         particlesArray[i].draw(ctx!);
-
         for (let j = i; j < particlesArray.length; j++) {
           const dx = particlesArray[i].x - particlesArray[j].x;
           const dy = particlesArray[i].y - particlesArray[j].y;
           const distance = Math.sqrt(dx * dx + dy * dy);
-
           if (distance < 120) {
             ctx!.beginPath();
-            ctx!.strokeStyle = `rgba(153, 69, 255, ${0.15 - distance/1000})`;
+            ctx!.strokeStyle = `rgba(153, 69, 255, ${0.15 - distance / 1000})`;
             ctx!.lineWidth = 0.2;
             ctx!.moveTo(particlesArray[i].x, particlesArray[i].y);
             ctx!.lineTo(particlesArray[j].x, particlesArray[j].y);
@@ -177,17 +165,18 @@ const Bounties: React.FC = () => {
       }
       requestAnimationFrame(animate);
     }
+
     function handleResize() {
       updateCanvasSize();
       init();
     }
 
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
     init();
     animate();
 
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("resize", handleResize);
     };
   }, [isVisible]);
 
@@ -195,6 +184,17 @@ const Bounties: React.FC = () => {
     const diffTime = Math.abs(to.getTime() - from.getTime());
     return Math.floor(diffTime / (1000 * 60 * 60 * 24));
   }
+
+  const filteredBounties = bounties
+    .filter((bounty) => {
+      const query = searchQuery.toLowerCase();
+      return (
+        bounty.title.toLowerCase().includes(query) ||
+        bounty.description.toLowerCase().includes(query) ||
+        bounty.repoInfo.full_name.toLowerCase().includes(query)
+      );
+    })
+    .slice(0, pathCheck ? bounties.length : 6); // 👈 Only 6 on non-/bounties pages
 
   return (
     <section
@@ -207,7 +207,6 @@ const Bounties: React.FC = () => {
         style={{ opacity: 0.4 }}
       />
       <div className="absolute inset-0 bg-gradient-to-b from-[#0E0E12]/80 via-[#0E0E12]/60 to-[#0E0E12]/80" />
-
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div
           className={`text-center mb-12 transition-all duration-700 transform ${
@@ -231,33 +230,15 @@ const Bounties: React.FC = () => {
             <input
               type="text"
               className="block w-full pl-10 pr-3 py-2 border border-[#2D2D3A] rounded-md bg-[#1A1A24] text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#9945FF] focus:border-transparent transition-all"
-              placeholder="Search by title, repo, or tags..."
+              placeholder="Search by title, repo, or description..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-
-          <div className="w-full md:w-auto">
-            <div className="relative inline-block w-full">
-              <select
-                className="block w-full pl-10 pr-8 py-2 text-base border border-[#2D2D3A] rounded-md bg-[#1A1A24] text-white appearance-none focus:outline-none focus:ring-2 focus:ring-[#9945FF] focus:border-transparent transition-all"
-                value={selectedDifficulty || ""}
-                onChange={(e) => setSelectedDifficulty(e.target.value || null)}
-              >
-                <option value="">All Difficulties</option>
-                <option value="Easy">Easy</option>
-                <option value="Medium">Medium</option>
-                <option value="Hard">Hard</option>
-              </select>
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Filter className="h-5 w-5 text-gray-400" />
-              </div>
-            </div>
-          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {bounties.map((bounty: Bounty, index: any) => (
+          {filteredBounties.map((bounty, index) => (
             <div
               key={bounty.id}
               className={`bounty-card bg-[#1A1A24] rounded-lg border border-[#2D2D3A] p-6 transition-all duration-700 transform ${
@@ -276,11 +257,9 @@ const Bounties: React.FC = () => {
                   {bounty.amount} SOL
                 </span>
               </div>
-
               <p className="text-gray-400 text-sm mb-4 line-clamp-2">
                 {bounty.description}
               </p>
-
               <div className="mb-4">
                 <div className="flex items-center text-sm text-gray-300 mb-2">
                   <span className="font-medium text-gray-400 mr-2">Repo:</span>
@@ -311,14 +290,16 @@ const Bounties: React.FC = () => {
           ))}
         </div>
 
-        <div className="text-center mt-12">
-          <a
-            className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-black bg-[#14F195] hover:bg-[#14F195]/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#14F195] transition-all pulse-animation"
-            onClick={() => router.push("/bounties")}
-          >
-            View All Bounties
-          </a>
-        </div>
+        {!pathCheck && (
+          <div className="text-center mt-12">
+            <button
+              className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-black bg-[#14F195] hover:bg-[#14F195]/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#14F195] transition-all pulse-animation"
+              onClick={() => router.push("/bounties")}
+            >
+              View All Bounties
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );

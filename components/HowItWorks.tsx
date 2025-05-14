@@ -14,7 +14,7 @@ labels: ["bounty:5SOL"]
 
 # The bot will automatically create a 5 SOL bounty
 # and track the issue for completion`,
-    demoImage: "https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg?auto=compress&cs=tinysrgb&w=1280"
+    demoImage: "createIssue.png"
   },
   {
     icon: <Users className="w-6 h-6 text-[#14F195]" />,
@@ -29,7 +29,7 @@ git checkout -b fix/issue-123
 
 # Work on the solution and commit
 git commit -m "Fix: Implement solution for #123"`,
-    demoImage: "https://images.pexels.com/photos/3861958/pexels-photo-3861958.jpeg?auto=compress&cs=tinysrgb&w=1280"
+    demoImage: "pullreq.png"
   },
   {
     icon: <Star className="w-6 h-6 text-[#14F195]" />,
@@ -43,7 +43,7 @@ git commit -m "Fix: Implement solution for #123"`,
 ✓ Issue requirements met
 ✓ Tests passing
 ✓ Code review approved`,
-    demoImage: "https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=1280"
+    demoImage: "pullreqmerge.png"
   },
   {
     icon: <DollarSign className="w-6 h-6 text-[#14F195]" />,
@@ -55,7 +55,7 @@ Transaction: 5nNamBZK8h...
 Amount: 5 SOL
 Status: Confirmed
 Block: #128,392,048`,
-    demoImage: "https://images.pexels.com/photos/8370752/pexels-photo-8370752.jpeg?auto=compress&cs=tinysrgb&w=1280"
+    demoImage: "final.png"
   },
 ];
 
@@ -238,7 +238,7 @@ const HowItWorks: React.FC = () => {
               <img
                 src={steps[activeStep].demoImage}
                 alt={steps[activeStep].title}
-                className="w-full h-full object-cover transition-opacity duration-500"
+                className="w-full h-full object-contain transition-opacity duration-500"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#0E0E12] via-transparent to-transparent"></div>
             </div>

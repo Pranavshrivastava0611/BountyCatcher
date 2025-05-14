@@ -154,20 +154,7 @@ const Hero: React.FC = () => {
           </a>
         </div>
 
-        <div className="mt-12 flex justify-center space-x-6">
-          <div className="text-center">
-            <p className="text-3xl font-bold bg-gradient-to-r from-[#9945FF] to-[#14F195] text-transparent bg-clip-text">150+</p>
-            <p className="text-sm text-gray-400">Active Bounties</p>
-          </div>
-          <div className="text-center">
-            <p className="text-3xl font-bold bg-gradient-to-r from-[#9945FF] to-[#14F195] text-transparent bg-clip-text">50K+</p>
-            <p className="text-sm text-gray-400">SOL Distributed</p>
-          </div>
-          <div className="text-center">
-            <p className="text-3xl font-bold bg-gradient-to-r from-[#9945FF] to-[#14F195] text-transparent bg-clip-text">3.2K+</p>
-            <p className="text-sm text-gray-400">Contributors</p>
-          </div>
-        </div>
+        
       </div>
     </section>
   );
