@@ -69,7 +69,7 @@ const app: ApplicationFunction = (app) => {
         owner,
         repo: repoName,
         issue_number: pr.number,
-        body: `🚨 @${pr.user.login}, please [register and link your wallet](https://a532-59-89-50-211.ngrok-free.app/dashboard) to participate in bounties.`,
+        body: `🚨 @${pr.user.login}, please [register and link your wallet](https://forkup.vercel.app/dashboard) to participate in bounties.`,
       });
       return;
     }
@@ -194,7 +194,6 @@ const app: ApplicationFunction = (app) => {
     }
   });
   
-
   // You can add more event handlers here.
   app.on("issue_comment.created", async (context) => {
     const comment = context.payload.comment.body.trim();
@@ -250,7 +249,7 @@ const app: ApplicationFunction = (app) => {
   
     if (!user || !user.privyWallet) {
       await context.octokit.issues.createComment(context.issue({
-        body: `🚫 @${sender}, you need to [register your wallet](https://a532-59-89-50-211.ngrok-free.app/dashboard) before creating a bounty.\n\n👉 Visit the link and connect your wallet via GitHub login.`,
+        body: `🚫 @${sender}, you need to [register your wallet](https://forkup.vercel.app/dashboard) before creating a bounty.\n\n👉 Visit the link and connect your wallet via GitHub login.`,
       }));
       return;
     }
@@ -397,21 +396,23 @@ const app: ApplicationFunction = (app) => {
       issue_number: prNumber,
       body: `🎉 @${contributorUsername}'s PR #${prNumber} was merged! Bounty for issue #${issueNumber} will now be processed.`,
     });
-
     try {
-      const response = await axios.post("https://a532-59-89-50-211.ngrok-free.app/api/send-bounty", {
-        repo: `${owner}/${repo}`,
-        prNumber,
-        mergedBy: mergerUsername,
-        maintainerPrivyId: MaintainerUser[0].userId,
-        contributorPrivyId: ContributorUser[0].userId,
-        prUrl,
-        contributorGithubId,
-        contributorUsername,
-        repoOwnerUsername: owner,
-        repoOwnerGithubId: context.payload.repository.owner.id.toString(),
-        amount,
-      });
+      const response = await axios.post(
+        "https://forkup.vercel.app/api/send-bounty",
+        {
+          repo: `${owner}/${repo}`,
+          prNumber,
+          mergedBy: mergerUsername,
+          maintainerPrivyId: MaintainerUser[0].userId,
+          contributorPrivyId: ContributorUser[0].userId,
+          prUrl,
+          contributorGithubId,
+          contributorUsername,
+          repoOwnerUsername: owner,
+          repoOwnerGithubId: context.payload.repository.owner.id.toString(),
+          amount,
+        }
+      );
   
       const txHash = response.data;
       // 🛠 Update bounty entry properly now

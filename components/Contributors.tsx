@@ -1,4 +1,3 @@
-"use client"
 import React from 'react';
 import { Check, Code, Wallet, Award } from 'lucide-react';
 
@@ -26,106 +25,60 @@ const Contributors: React.FC = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div>
-            <div className="bg-[#1A1A24] rounded-lg p-6 md:p-8 border border-[#2D2D3A]">
-              <h3 className="text-2xl font-bold text-white mb-6">How to Earn SOL</h3>
+        <div className="max-w-3xl mx-auto">
+          <div className="bg-[#1A1A24] rounded-lg p-6 md:p-8 border border-[#2D2D3A] mb-10">
+            <h3 className="text-2xl font-bold text-white mb-6">How to Earn SOL</h3>
+            
+            <ul className="space-y-6">
+              <li className="flex">
+                <div className="flex-shrink-0 flex items-start justify-center w-10 h-10 rounded-full bg-[#9945FF]/20 mr-4 mt-1">
+                  <Check className="w-5 h-5 text-[#9945FF]" />
+                </div>
+                <div>
+                  <h4 className="text-lg font-medium text-white mb-1">Find Bounties</h4>
+                  <p className="text-gray-400">Browse through available bounties and find issues that match your expertise.</p>
+                </div>
+              </li>
               
-              <ul className="space-y-6">
-                <li className="flex">
-                  <div className="flex-shrink-0 flex items-start justify-center w-10 h-10 rounded-full bg-[#9945FF]/20 mr-4 mt-1">
-                    <Check className="w-5 h-5 text-[#9945FF]" />
-                  </div>
-                  <div>
-                    <h4 className="text-lg font-medium text-white mb-1">Find Bounties</h4>
-                    <p className="text-gray-400">Browse through available bounties and find issues that match your expertise.</p>
-                  </div>
-                </li>
-                
-                <li className="flex">
-                  <div className="flex-shrink-0 flex items-start justify-center w-10 h-10 rounded-full bg-[#9945FF]/20 mr-4 mt-1">
-                    <Code className="w-5 h-5 text-[#9945FF]" />
-                  </div>
-                  <div>
-                    <h4 className="text-lg font-medium text-white mb-1">Solve the Issue</h4>
-                    <p className="text-gray-400">Work on the issue locally, following the project's contribution guidelines.</p>
-                  </div>
-                </li>
-                
-                <li className="flex">
-                  <div className="flex-shrink-0 flex items-start justify-center w-10 h-10 rounded-full bg-[#9945FF]/20 mr-4 mt-1">
-                    <Wallet className="w-5 h-5 text-[#9945FF]" />
-                  </div>
-                  <div>
-                    <h4 className="text-lg font-medium text-white mb-1">Add Your Wallet</h4>
-                    <p className="text-gray-400">Include your Solana wallet address in your profile or in the PR description.</p>
-                  </div>
-                </li>
-                
-                <li className="flex">
-                  <div className="flex-shrink-0 flex items-start justify-center w-10 h-10 rounded-full bg-[#9945FF]/20 mr-4 mt-1">
-                    <Award className="w-5 h-5 text-[#9945FF]" />
-                  </div>
-                  <div>
-                    <h4 className="text-lg font-medium text-white mb-1">Get Paid</h4>
-                    <p className="text-gray-400">When your PR is merged, the bot automatically sends SOL to your wallet.</p>
-                  </div>
-                </li>
-              </ul>
-            </div>
+              <li className="flex">
+                <div className="flex-shrink-0 flex items-start justify-center w-10 h-10 rounded-full bg-[#9945FF]/20 mr-4 mt-1">
+                  <Code className="w-5 h-5 text-[#9945FF]" />
+                </div>
+                <div>
+                  <h4 className="text-lg font-medium text-white mb-1">Solve the Issue</h4>
+                  <p className="text-gray-400">Work on the issue locally, following the project's contribution guidelines.</p>
+                </div>
+              </li>
+              
+              <li className="flex">
+                <div className="flex-shrink-0 flex items-start justify-center w-10 h-10 rounded-full bg-[#9945FF]/20 mr-4 mt-1">
+                  <Wallet className="w-5 h-5 text-[#9945FF]" />
+                </div>
+                <div>
+                  <h4 className="text-lg font-medium text-white mb-1">Add Your Wallet</h4>
+                  <p className="text-gray-400">Include your Solana wallet address in your profile or in the PR description.</p>
+                </div>
+              </li>
+              
+              <li className="flex">
+                <div className="flex-shrink-0 flex items-start justify-center w-10 h-10 rounded-full bg-[#9945FF]/20 mr-4 mt-1">
+                  <Award className="w-5 h-5 text-[#9945FF]" />
+                </div>
+                <div>
+                  <h4 className="text-lg font-medium text-white mb-1">Get Paid</h4>
+                  <p className="text-gray-400">When your PR is merged, the bot automatically sends SOL to your wallet.</p>
+                </div>
+              </li>
+            </ul>
           </div>
           
-          <div className="space-y-6">
-            <div className="bg-[#1A1A24] rounded-lg p-6 border border-[#2D2D3A]">
-              <div className="flex items-center mb-4">
-                <img
-                  src="https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&w=64"
-                  alt="Contributor"
-                  className="w-12 h-12 rounded-full mr-4"
-                />
-                <div>
-                  <h4 className="text-white font-medium">Alex Johnson</h4>
-                  <p className="text-gray-400 text-sm">Frontend Developer</p>
-                </div>
-              </div>
-              <p className="text-gray-300 mb-4">
-                "I made over 120 SOL in three months by solving issues in my spare time. The automatic payouts are amazing – I don't have to chase anyone for payment."
-              </p>
-              <div className="flex items-center text-sm text-gray-400">
-                <span>Total earned:</span>
-                <span className="ml-2 text-[#14F195] font-medium">120.5 SOL</span>
-              </div>
-            </div>
-            
-            <div className="bg-[#1A1A24] rounded-lg p-6 border border-[#2D2D3A]">
-              <div className="flex items-center mb-4">
-                <img
-                  src="https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=64"
-                  alt="Contributor"
-                  className="w-12 h-12 rounded-full mr-4"
-                />
-                <div>
-                  <h4 className="text-white font-medium">Sarah Chen</h4>
-                  <p className="text-gray-400 text-sm">Full Stack Developer</p>
-                </div>
-              </div>
-              <p className="text-gray-300 mb-4">
-                "As someone new to the Solana ecosystem, this was the perfect way to learn while earning. I've solved 15 issues so far, and it's been rewarding both financially and educationally."
-              </p>
-              <div className="flex items-center text-sm text-gray-400">
-                <span>Total earned:</span>
-                <span className="ml-2 text-[#14F195] font-medium">68.2 SOL</span>
-              </div>
-            </div>
-            
-            <div className="flex justify-center">
-              <a
-                href="#bounties"
-                className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-black bg-[#14F195] hover:bg-[#14F195]/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#14F195] transition-all"
-              >
-                Start Contributing
-              </a>
-            </div>
+          <div className="text-center">
+            <a
+              href="#bounties"
+              className="inline-flex items-center justify-center px-8 py-4 border border-transparent text-base font-medium rounded-md text-black bg-[#14F195] hover:bg-[#14F195]/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#14F195] transition-all transform hover:scale-105 duration-200"
+            >
+              Start Contributing
+            </a>
           </div>
         </div>
       </div>

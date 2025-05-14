@@ -72,9 +72,9 @@ const Header: React.FC = () => {
                 className="flex items-center cursor-pointer"
                 onClick={() => scrollToSection("hero")}
               >
-                <Wallet className="h-8 w-8 text-[#14F195] float-animation" />
-                <span className="ml-2 text-xl font-bold bg-gradient-to-r from-[#9945FF] to-[#14F195] text-transparent bg-clip-text">
-                  SolanaBounty
+                <Wallet className="h-8 w-8 text-[#14F195]" />
+                <span className="ml-2 text-2xl font-bold bg-gradient-to-r from-[#9945FF] to-[#14F195] text-transparent bg-clip-text">
+                  ForkUp
                 </span>
               </div>
             </div>
@@ -86,7 +86,6 @@ const Header: React.FC = () => {
                 { id: "how-it-works", label: "How It Works" },
                 { id: "bounties", label: "Bounties" },
                 { id: "contributors", label: "For Contributors" },
-                { id: "faq", label: "FAQ" },
                 { id: "stats", label: "Stats" },
               ].map(({ id, label }) => (
                 <li key={id}>
