@@ -130,7 +130,7 @@ export async function GET(req: Request) {
 
     console.log("Installation Access Token:", accessToken);
 
-    return Response.redirect("https://a2d1-220-158-168-162.ngrok-free.app/");
+    return Response.redirect("https://forkup.vercel.app/");
 
   } catch (error: any) {
     console.error("Error generating installation access token:", error.response?.data || error.message);
