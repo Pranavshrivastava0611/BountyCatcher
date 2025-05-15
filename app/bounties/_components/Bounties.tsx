@@ -289,7 +289,6 @@ const Bounties: React.FC = () => {
             </div>
           ))}
         </div>
-
         {!pathCheck && (
           <div className="text-center mt-12">
             <button

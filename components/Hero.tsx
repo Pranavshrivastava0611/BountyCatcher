@@ -115,16 +115,7 @@ const Hero: React.FC = () => {
       <div className="absolute inset-0 bg-gradient-to-b from-[#0E0E12] via-[#0E0E12]/90 to-[#0E0E12]" />
       
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <div 
-          className="inline-block mb-4 px-4 py-1 rounded-full bg-[#2D2D3A] border border-[#3D3D4A]"
-        >
-          <p className="text-sm text-gray-300">
-            <span className="inline-flex items-center">
-              <Github className="w-4 h-4 mr-2 text-[#14F195]" />
-              <span>Powered by Solana & GitHub</span>
-            </span>
-          </p>
-        </div>
+        
         
         <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6">
           <span className="block text-white">Contribute to Open Source.</span>
@@ -153,8 +144,6 @@ const Hero: React.FC = () => {
             View Active Bounties
           </a>
         </div>
-
-        
       </div>
     </section>
   );

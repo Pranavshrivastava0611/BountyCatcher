@@ -6,56 +6,56 @@ import { GitPullRequest, DollarSign, Star, Users, ChevronRight, Code, CheckCircl
 const steps = [
   {
     icon: <GitPullRequest className="w-6 h-6 text-[#14F195]" />,
-    title: 'Maintainers Create Bounties',
+    title: "Maintainers Create Bounties",
     description:
-      'Repository maintainers tag issues with bounty amounts in SOL. The bot automatically detects these tags and creates the bounty.',
+      "Repository maintainers tag issues with bounty amounts in SOL. The bot automatically detects these tags and creates the bounty.",
     code: `# Add a bounty label to your issue
-labels: ["bounty:5SOL"]
+labels: /registerBounty 5SOL https://github.com/Pranavshrivas...
 
 # The bot will automatically create a 5 SOL bounty
 # and track the issue for completion`,
-    demoImage: "createIssue.png"
+    demoImage: "createIssue.png",
   },
   {
     icon: <Users className="w-6 h-6 text-[#14F195]" />,
-    title: 'Contributors Solve Issues',
+    title: "Contributors Solve Issues",
     description:
-      'Contributors browse bounties, work on solutions, and submit pull requests referencing the bounty issue.',
+      "Contributors browse bounties, work on solutions, and submit pull requests referencing the bounty issue.",
     code: `# Clone the repository
 git clone https://github.com/user/repo.git
 
-# Create a branch for the bounty
-git checkout -b fix/issue-123
+# Create a new branch for the issue
 
-# Work on the solution and commit
-git commit -m "Fix: Implement solution for #123"`,
-    demoImage: "pullreq.png"
+
+# Work on the solution and create a pull request with the issue number 
+fix_issue#(issue_number)`,
+    demoImage: "pullreq.png",
   },
   {
     icon: <Star className="w-6 h-6 text-[#14F195]" />,
-    title: 'PR Gets Approved',
+    title: "PR Gets Approved",
     description:
-      'When a maintainer approves and merges a pull request, the bot verifies that the solution resolves the issue.',
+      "When a maintainer approves and merges a pull request, the bot verifies merged request",
     code: `# Maintainer reviews and approves PR
-/approve
 
-# Bot verifies the solution
+
+# maintainer verifies the solution
 ✓ Issue requirements met
 ✓ Tests passing
 ✓ Code review approved`,
-    demoImage: "pullreqmerge.png"
+    demoImage: "pullreqmerge.png",
   },
   {
     icon: <DollarSign className="w-6 h-6 text-[#14F195]" />,
-    title: 'Instant SOL Payout',
+    title: "Instant SOL Payout",
     description:
-      'The bot automatically transfers SOL to the contributor\'s wallet address. No manual intervention required.',
+      "The bot automatically transfers SOL to the contributor's wallet address. No manual intervention required.",
     code: `# Automatic SOL transfer initiated
 Transaction: 5nNamBZK8h...
 Amount: 5 SOL
 Status: Confirmed
-Block: #128,392,048`,
-    demoImage: "final.png"
+`,
+    demoImage: "final.png",
   },
 ];
 

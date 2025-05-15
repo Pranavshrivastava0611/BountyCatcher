@@ -86,13 +86,9 @@ const Stats: React.FC = () => {
       const getBountiesInfo = async ()=>{
           try{
           const response = await axios.get("/api/get-bonties-page-info");
-          console.log("response" , response.data);
           SetUserInfo(response.data.user_info);
           setRepos(response.data.repos);
           setBounties(response.data.bounties);
-          console.log("bounties",bounties)
-          console.log("repos",repos)
-          console.log("user info",userInfo)
           }catch(e){
             console.log("error in getting the page info ", e)
           }
@@ -252,51 +248,6 @@ const Stats: React.FC = () => {
               <p className="text-gray-400 text-sm">{item.description}</p>
             </div>
           ))}
-        </div>
-
-        <div className="bg-[#1A1A24] border border-[#2D2D3A] rounded-lg p-6 md:p-8">
-          <div className="flex flex-col md:flex-row items-center justify-between">
-            <div className="w-full md:w-1/3 mb-8 md:mb-0">
-              <h3 className="text-2xl font-bold text-white mb-4">SOL Distribution Growth</h3>
-              <p className="text-gray-400 mb-6">
-                The amount of SOL distributed to contributors has grown exponentially as more projects adopt our bounty system.
-              </p>
-              <div className="space-y-4">
-                <div>
-                  <div className="flex justify-between text-sm mb-1">
-                    <span className="text-gray-400">Monthly Growth</span>
-                    <span className="text-[#14F195] font-medium">32%</span>
-                  </div>
-                  <div className="w-full bg-[#2D2D3A] rounded-full h-2">
-                    <div className="bg-gradient-to-r from-[#9945FF] to-[#14F195] h-2 rounded-full" style={{ width: '32%' }}></div>
-                  </div>
-                </div>
-                <div>
-                  <div className="flex justify-between text-sm mb-1">
-                    <span className="text-gray-400">Contributor Retention</span>
-                    <span className="text-[#14F195] font-medium">78%</span>
-                  </div>
-                  <div className="w-full bg-[#2D2D3A] rounded-full h-2">
-                    <div className="bg-gradient-to-r from-[#9945FF] to-[#14F195] h-2 rounded-full" style={{ width: '78%' }}></div>
-                  </div>
-                </div>
-                <div>
-                  <div className="flex justify-between text-sm mb-1">
-                    <span className="text-gray-400">Issue Resolution Rate</span>
-                    <span className="text-[#14F195] font-medium">92%</span>
-                  </div>
-                  <div className="w-full bg-[#2D2D3A] rounded-full h-2">
-                    <div className="bg-gradient-to-r from-[#9945FF] to-[#14F195] h-2 rounded-full" style={{ width: '92%' }}></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="w-full md:w-2/3 md:pl-8">
-              <div className="rounded-lg overflow-hidden border border-[#2D2D3A]">
-                <canvas ref={chartRef} className="w-full h-auto" />
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </section>

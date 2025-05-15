@@ -10,8 +10,7 @@ import {usePrivy} from "@privy-io/react-auth"
 
 
 export default function Home() {
-  const { user } = usePrivy();
-  console.log("user info",user);
+
   return (
     <div className="min-h-screen bg-[#0E0E12]">
     <Header />

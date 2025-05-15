@@ -21,10 +21,9 @@ export default function RegisterWallet() {
     logout,
     user,
     linkGithub,
-    exportWallet,
   } = usePrivy();
 
-  const { exportWallet: exportSolanaWallet } = useSolanaWallets();
+  const { exportWallet } = useSolanaWallets();
   const { wallets } = useWallets();
   const { delegateWallet } = useDelegatedActions();
 
@@ -87,7 +86,6 @@ export default function RegisterWallet() {
         setIsLoading(false);
         return;
       }
-
       if (!isSolanaDelegated && embeddedSolanaWallet) {
         setStatus("Delegating Solana wallet...");
         await delegateWallet({
@@ -179,7 +177,9 @@ export default function RegisterWallet() {
           <div className="flex flex-wrap items-center justify-between p-3 sm:p-4 bg-[#2D2D3A]/50 rounded-lg">
             <div className="flex items-center mr-4 mb-2 sm:mb-0">
               <Github className="w-4 h-4 sm:w-5 sm:h-5 text-[#14F195] mr-2 sm:mr-3" />
-              <span className="text-sm sm:text-base text-gray-300">GitHub Account</span>
+              <span className="text-sm sm:text-base text-gray-300">
+                GitHub Account
+              </span>
             </div>
             {githubUsername ? (
               <span className="text-sm sm:text-base text-[#14F195] font-medium">
@@ -198,23 +198,33 @@ export default function RegisterWallet() {
           {embeddedSolanaWallet && (
             <div className="p-3 sm:p-4 bg-[#2D2D3A]/50 rounded-lg">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm sm:text-base text-gray-300">Solana Wallet</span>
-                <span className="text-xs sm:text-sm text-[#14F195]">Connected</span>
+                <span className="text-sm sm:text-base text-gray-300">
+                  Solana Wallet
+                </span>
+                <span className="text-xs sm:text-sm text-[#14F195]">
+                  Connected
+                </span>
               </div>
               <div className="relative group">
                 <div className="sm:hidden flex items-center bg-[#0E0E12] rounded p-2">
                   <code className="text-xs text-gray-400 font-mono overflow-hidden text-ellipsis whitespace-nowrap pr-10">
-                    {`${ 
-                     //@ts-ignore
-                     embeddedSolanaWallet.address.slice(0, 6)}...${embeddedSolanaWallet.address.slice(-4)}`}
+                    {`${
+                      //@ts-ignore
+                      embeddedSolanaWallet.address.slice(0, 6)
+                    }...${
+                      //@ts-ignore
+                      embeddedSolanaWallet.address.slice(-4)
+                    }`}
                   </code>
                 </div>
                 <code className="hidden sm:block w-full p-2 bg-[#0E0E12] rounded text-sm text-gray-400 font-mono overflow-hidden text-ellipsis whitespace-nowrap pr-10">
-                  { //@ts-ignore
-                  embeddedSolanaWallet.address}
+                  {
+                    //@ts-ignore
+                    embeddedSolanaWallet.address
+                  }
                 </code>
-                <button 
-                   //@ts-ignore
+                <button
+                  //@ts-ignore
                   onClick={() => copyToClipboard(embeddedSolanaWallet.address)}
                   className="absolute right-2 top-1/2 transform -translate-y-1/2 p-1.5 hover:bg-[#2D2D3A] rounded-md transition-colors"
                 >
@@ -242,9 +252,11 @@ export default function RegisterWallet() {
           )}
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-          
             <button
-              onClick={()=>exportSolanaWallet}
+              onClick={async ()=>{
+                
+              await exportWallet();
+              }}
               className="flex items-center justify-center px-3 py-2.5 sm:px-4 sm:py-3 bg-[#9945FF]/20 hover:bg-[#9945FF]/30 text-[#9945FF] rounded-lg transition-colors text-sm sm:text-base"
             >
               <ExternalLink className="w-4 h-4 mr-2" />

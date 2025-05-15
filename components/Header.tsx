@@ -13,7 +13,6 @@ const Header: React.FC = () => {
   const {user,logout} = usePrivy();
   const router = useRouter()
  
-
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 10) {
@@ -73,7 +72,7 @@ const Header: React.FC = () => {
                 onClick={() => scrollToSection("hero")}
               >
                 <Wallet className="h-8 w-8 text-[#14F195]" />
-                <span className="ml-2 text-2xl font-bold bg-gradient-to-r from-[#9945FF] to-[#14F195] text-transparent bg-clip-text">
+                <span className="ml-2 text-4xl font-bold bg-gradient-to-r from-[#9945FF] to-[#14F195] text-transparent bg-clip-text">
                   ForkUp
                 </span>
               </div>
