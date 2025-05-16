@@ -13,8 +13,8 @@ export default function ClientProviders({ children }: { children: ReactNode }) {
         loginMethods: [ "github"],
         solanaClusters: [
           {
-            name: "devnet",
-            rpcUrl: "https://api.devnet.solana.com",
+            name: "mainnet-beta",
+            rpcUrl: 'https://api.mainnet-beta.solana.com',
           },
         ],
        
