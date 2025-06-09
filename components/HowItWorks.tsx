@@ -8,8 +8,8 @@ const steps = [
     icon: <GitPullRequest className="w-6 h-6 text-[#14F195]" />,
     title: "Maintainers Create Bounties",
     description:
-      "Repository maintainers tag issues with bounty amounts in SOL. The bot automatically detects these tags and creates the bounty.",
-    code: `# Add a bounty label to your issue
+      "Repository maintainers and contributors first install the githubApp from (https://github.com/apps/forkupApp) and then maintainers tag issues with bounty amounts in SOL. The bot automatically detects these tags and creates the bounty.",
+    code: `# First install the githubApp from (https://github.com/apps/forkupApp) and then Add a bounty label to your issue
 labels: /registerBounty 5SOL https://github.com/Pranavshrivas...
 
 # The bot will automatically create a 5 SOL bounty

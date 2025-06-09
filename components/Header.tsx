@@ -21,7 +21,7 @@ const Header: React.FC = () => {
         setIsScrolled(false);
       }
 
-      const sections = ['hero', 'how-it-works', 'bounties', 'contributors', 'stats', 'faq'];
+      const sections = ['hero', 'how-it-works', 'bounties', 'contributors', 'stats'];
       const currentSection = sections.find(section => {
         const element = document.getElementById(section);
         if (element) {
